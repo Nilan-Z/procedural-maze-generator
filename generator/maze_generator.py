@@ -23,18 +23,28 @@ class MazeGenerator():
     def initialize_maze(self):
         initial_cell = random.choice(self.maze)
         initial_cell.visited = True
-        self.display_maze()
         self.propagate(initial_cell)
+        self.display_maze()
     
     def propagate(self, cell):
         not_visited_neighbors = self.get_not_visited_neighbors(cell)
-        ''' Future logic to handle propagation
         if not not_visited_neighbors:
             pass #Add logic to handle when there are no unvisited neighbors
         random_not_visited_neighbors = random.choice(not_visited_neighbors) 
-        if random_not_visited_neighbors.x == cell.x - self.width:
-            cell.wall[1] = False  # Remove wall to the top
-        '''
+        if random_not_visited_neighbors.x == cell.x and random_not_visited_neighbors.y < cell.y:
+            cell.walls[0] = False  # Remove wall to the top
+            random_not_visited_neighbors.walls[2] = False # Remove wall to the bottom
+        elif random_not_visited_neighbors.x == cell.x and random_not_visited_neighbors.y > cell.y:
+            cell.walls[2] = False  # Remove wall to the bottom
+            random_not_visited_neighbors.walls[0] = False # Remove wall to the top
+        elif random_not_visited_neighbors.x < cell.x and random_not_visited_neighbors.y == cell.y:
+            cell.walls[3] = False
+            random_not_visited_neighbors.walls[1] = False
+        elif random_not_visited_neighbors.x > cell.x and random_not_visited_neighbors.y == cell.y:
+            cell.walls[1] = False
+            random_not_visited_neighbors.walls[3] = False
+
+
 
             
     
@@ -83,7 +93,22 @@ class MazeGenerator():
             row = ""
             for x in range(self.width):
                 cell = self.maze[y * self.width + x]
-                row += " " if not cell.walls[0] else "#"
+
+                if cell.walls[3]:
+                    row += "|"
+                else:
+                    row += " "
+
+                if cell.walls[2]:
+                    row += "_"
+                else:
+                    row += " "
+
+            last_cell = self.maze[y * self.width + self.width - 1]
+            if last_cell.walls[1]:
+                row += "|"
+            else:
+                row += " "
+
             print(row)
-        print()
     
