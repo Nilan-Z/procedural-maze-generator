@@ -2,6 +2,7 @@ from generator.cell import Cell
 import random
 class MazeGenerator():
     def __init__(self):
+        """Initializes the MazeGenerator with an empty list of visited cells and dimensions."""
         self.visited_cells = []
         self.width = 0
         self.height = 0
@@ -24,6 +25,7 @@ class MazeGenerator():
         return self.maze
     
     def initialize_maze(self):
+        """Initializes the maze by selecting a random starting cell and marking it as visited."""
         initial_cell = random.choice(self.maze)
         initial_cell.visited = True
         self.visited_cells.append(initial_cell)
@@ -33,10 +35,19 @@ class MazeGenerator():
         self.display_maze()
     
     def propagate(self, cell):
+        '''
+        Propagates through the maze from the given cell, removing walls between
+
+        Args:
+            cell (Cell): The current cell from which to propagate.
+
+        Returns:
+            None
+        '''
         not_visited_neighbors = self.get_not_visited_neighbors(cell)
         if not not_visited_neighbors:
-            pass #Add logic to handle when there are no unvisited neighbors
-        random_not_visited_neighbors = random.choice(not_visited_neighbors) 
+            pass #Add logic to handle when there are no unvisited neighbors 
+        random_not_visited_neighbors = random.choice(not_visited_neighbors)     
         if random_not_visited_neighbors.x == cell.x and random_not_visited_neighbors.y < cell.y:
             cell.walls[0] = False  # Remove wall to the top
             random_not_visited_neighbors.walls[2] = False # Remove wall to the bottom
