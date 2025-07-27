@@ -22,11 +22,21 @@ class MazeGenerator():
     
     def initialize_maze(self):
         initial_cell = random.choice(self.maze)
+        initial_cell.visited = True
+        self.display_maze()
         self.propagate(initial_cell)
     
     def propagate(self, cell):
         not_visited_neighbors = self.get_not_visited_neighbors(cell)
-        print(f"Visiting cell at ({cell.x}, {cell.y}), unvisited neighbors: {len(not_visited_neighbors)}")
+        ''' Future logic to handle propagation
+        if not not_visited_neighbors:
+            pass #Add logic to handle when there are no unvisited neighbors
+        random_not_visited_neighbors = random.choice(not_visited_neighbors) 
+        if random_not_visited_neighbors.x == cell.x - self.width:
+            cell.wall[1] = False  # Remove wall to the top
+        '''
+
+            
     
     def get_not_visited_neighbors(self, cell):
         """Returns a list of neighboring cells that have not been visited.
@@ -66,3 +76,14 @@ class MazeGenerator():
             neighbors.append(bottom)
 
         return neighbors
+    
+    def display_maze(self):
+        """Displays the maze in a simple text format."""
+        for y in range(self.height):
+            row = ""
+            for x in range(self.width):
+                cell = self.maze[y * self.width + x]
+                row += " " if not cell.walls[0] else "#"
+            print(row)
+        print()
+    
