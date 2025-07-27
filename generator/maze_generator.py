@@ -2,7 +2,10 @@ from generator.cell import Cell
 import random
 class MazeGenerator():
     def __init__(self):
-        pass
+        self.visited_cells = []
+        self.width = 0
+        self.height = 0
+        self.maze = []
 
     def generateMaze(self, width, height):
         """Generates a maze of given width and height.
@@ -23,6 +26,9 @@ class MazeGenerator():
     def initialize_maze(self):
         initial_cell = random.choice(self.maze)
         initial_cell.visited = True
+        self.visited_cells.append(initial_cell)
+        self.visited_cells.append("1à")
+        print(self.visited_cells)
         self.propagate(initial_cell)
         self.display_maze()
     
