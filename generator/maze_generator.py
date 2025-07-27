@@ -27,9 +27,9 @@ class MazeGenerator():
         initial_cell = random.choice(self.maze)
         initial_cell.visited = True
         self.visited_cells.append(initial_cell)
-        self.visited_cells.append("1à")
-        print(self.visited_cells)
         self.propagate(initial_cell)
+        for cell in self.maze:
+            pass # Add logic to handle all cells, if needed
         self.display_maze()
     
     def propagate(self, cell):
