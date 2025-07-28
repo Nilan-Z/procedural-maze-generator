@@ -1,16 +1,37 @@
 from generator.cell import Cell
 import random
 
-class MazeGenerator():
+class MazeGenerator:
+    """
+    A class for generating a 2D maze using randomized propagation.
+
+    Attributes:
+        visited_cells (list): List of cells that have been visited.
+        width (int): Width of the maze.
+        height (int): Height of the maze.
+        maze (list[Cell]): A flat list of Cell objects representing the maze.
+    """
+
     def __init__(self):
-        """Initializes the MazeGenerator with an empty list of visited cells and dimensions."""
+        """
+        Initializes an empty maze with default dimensions and empty visited cells list.
+        """
         self.visited_cells = []
         self.width = 0
         self.height = 0
         self.maze = []
 
     def generateMaze(self, width, height):
-        """Generates a maze of given width and height."""
+        """
+        Generates a maze with the given width and height.
+
+        Args:
+            width (int): Number of cells in the horizontal direction.
+            height (int): Number of cells in the vertical direction.
+
+        Returns:
+            list[Cell]: A flat list of Cell objects forming the complete maze.
+        """
         self.width = width
         self.height = height
         self.maze = [Cell(x, y) for y in range(height) for x in range(width)]
@@ -19,7 +40,10 @@ class MazeGenerator():
         return self.maze
 
     def initialize_maze(self):
-        """Starts the maze generation from a random cell."""
+        """
+        Initializes the maze by selecting a random starting cell, 
+        then uses randomized propagation and backtracking to generate the maze.
+        """
         initial_cell = random.choice(self.maze)
         initial_cell.visited = True
         self.visited_cells.append(initial_cell)
@@ -40,7 +64,16 @@ class MazeGenerator():
         self.display_maze()
 
     def propagate(self, cell):
-        """Propagates through the maze from the given cell, removing walls."""
+        """
+        Chooses a random unvisited neighbor, removes the wall between it and the current cell, 
+        and marks it as visited.
+
+        Args:
+            cell (Cell): The current cell from which to propagate.
+
+        Returns:
+            Cell | None: The newly visited neighbor, or None if no unvisited neighbors exist.
+        """
         not_visited_neighbors = self.get_not_visited_neighbors(cell)
         if not not_visited_neighbors:
             return None  # No unvisited neighbors, need to backtrack
@@ -69,7 +102,15 @@ class MazeGenerator():
         return random_neighbor
 
     def get_not_visited_neighbors(self, cell):
-        """Returns a list of neighboring cells that have not been visited."""
+        """
+        Finds neighboring cells that have not yet been visited.
+
+        Args:
+            cell (Cell): The current cell to check from.
+
+        Returns:
+            list[Cell]: List of unvisited neighboring Cell objects.
+        """
         neighbors = []
 
         def get_cell(x, y):
@@ -86,14 +127,21 @@ class MazeGenerator():
         return neighbors
 
     def find_backtrack_cell(self):
-        """Finds a visited cell that still has unvisited neighbors."""
+        """
+        Searches for a previously visited cell that still has unvisited neighbors.
+
+        Returns:
+            Cell | None: A cell to backtrack to, or None if none exist.
+        """
         for cell in reversed(self.visited_cells):  # Try most recent first
             if self.get_not_visited_neighbors(cell):
                 return cell
         return None
 
     def display_maze(self):
-        """Displays the maze in a simple text format."""
+        """
+        Displays the maze structure as ASCII art in the console.
+        """
         for y in range(self.height):
             row = ""
             for x in range(self.width):
