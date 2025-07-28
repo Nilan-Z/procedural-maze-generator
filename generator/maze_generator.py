@@ -142,6 +142,8 @@ class MazeGenerator:
         """
         Displays the maze structure as ASCII art in the console.
         """
+        header = (" " + "_") * self.width 
+        print(header)
         for y in range(self.height):
             row = ""
             for x in range(self.width):
