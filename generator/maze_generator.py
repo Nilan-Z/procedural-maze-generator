@@ -37,6 +37,8 @@ class MazeGenerator:
         self.maze = [Cell(x, y) for y in range(height) for x in range(width)]
         self.visited_cells = []  # Reset visited cells
         self.initialize_maze()
+        self.add_entrance_exit()
+        self.display_maze()
         return self.maze
 
     def initialize_maze(self):
@@ -61,7 +63,6 @@ class MazeGenerator:
                 else:
                     break  # Should not happen unless maze is complete
 
-        self.display_maze()
 
     def propagate(self, cell):
         """
@@ -137,6 +138,37 @@ class MazeGenerator:
             if self.get_not_visited_neighbors(cell):
                 return cell
         return None
+    
+    def add_entrance_exit(self):
+        """
+        Adds an entrance and exit to the maze by modifying the walls of the first and last cells.
+        """
+
+        border_cells = [cell for cell in self.maze 
+                    if cell.y == 0 or cell.y == self.height - 1 or
+                       cell.x == 0 or cell.x == self.width - 1]
+        
+        self.maze_entrance = random.choice(border_cells)
+        border_cells.remove(self.maze_entrance)
+        self.maze_exit = random.choice(border_cells)
+
+        if self.maze_entrance.y == 0:
+            self.maze_entrance.walls[0] = False  
+        elif self.maze_entrance.y == self.height - 1:
+            self.maze_entrance.walls[2] = False  
+        elif self.maze_entrance.x == 0:
+            self.maze_entrance.walls[3] = False  
+        elif self.maze_entrance.x == self.width - 1:
+            self.maze_entrance.walls[1] = False  
+
+        if self.maze_exit.y == 0:
+            self.maze_exit.walls[0] = False
+        elif self.maze_exit.y == self.height - 1:
+            self.maze_exit.walls[2] = False
+        elif self.maze_exit.x == 0:
+            self.maze_exit.walls[3] = False
+        elif self.maze_exit.x == self.width - 1:
+            self.maze_exit.walls[1] = False
 
     def display_maze(self):
         """
