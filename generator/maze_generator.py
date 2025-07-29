@@ -38,7 +38,6 @@ class MazeGenerator:
         self.visited_cells = []  # Reset visited cells
         self.initialize_maze()
         self.add_entrance_exit()
-        self.display_maze()
         return self.maze
 
     def initialize_maze(self):
@@ -170,19 +169,3 @@ class MazeGenerator:
         elif self.maze_exit.x == self.width - 1:
             self.maze_exit.walls[1] = False
 
-    def display_maze(self):
-        """
-        Displays the maze structure as ASCII art in the console.
-        """
-        header = (" " + "_") * self.width 
-        print(header)
-        for y in range(self.height):
-            row = ""
-            for x in range(self.width):
-                cell = self.maze[y * self.width + x]
-                row += "|" if cell.walls[3] else " "
-                row += "_" if cell.walls[2] else " "
-
-            last_cell = self.maze[y * self.width + self.width - 1]
-            row += "|" if last_cell.walls[1] else " "
-            print(row)
