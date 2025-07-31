@@ -19,4 +19,4 @@ if __name__ == "__main__":
     maze = maze_generator.generateMaze(width, height)
 
     display = Display()
-    display.display_maze(maze, width, height, output_path, output_format)
+    display.display_maze(maze, width, height, output_path, filename, output_format)
