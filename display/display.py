@@ -20,7 +20,8 @@ class Display:
             cell_size (int): Pixel size of a single maze cell. Default is 10.
         """
         self.cell_size = cell_size
-    def display_maze(self, maze, width: int, height: int, output_path: str = './output/maze.png', output_format: str = 'png'):
+
+    def display_maze(self, maze, width: int, height: int, output_path: str = './output/', filename: str = 'maze', output_format: str = 'png'):
         """
         Render the maze and save it to a file in the specified format.
 
@@ -32,12 +33,17 @@ class Display:
             output_path (str): Path where the image will be saved. Default is './output/maze.png'.
             output_format (str): Format of the output file ('png' or 'svg'). Default is 'png'.
         """
+    
+        full_path = os.path.join(output_path, f"{filename}.{output_format.lower()}")
+        os.makedirs(output_path, exist_ok=True)  # Assure que le dossier existe
+
         if output_format.lower() == 'png':
-            self.display_maze_png(maze, width, height, output_path)
+            self.display_maze_png(maze, width, height, full_path)
         elif output_format.lower() == 'svg':
-            self.display_maze_svg(maze, width, height, output_path)
+            self.display_maze_svg(maze, width, height, full_path)
         else:
             raise ValueError(f"Unsupported format: {output_format}. Use 'png' or 'svg'.")
+
         
 
     def display_maze_png(self, maze, width: int, height: int, output_path: str = './output/maze.png'):
