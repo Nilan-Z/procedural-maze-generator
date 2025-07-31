@@ -87,4 +87,48 @@ class Display:
         image.save(output_path)
 
     def display_maze_svg(self, maze, width: int, height: int, output_path: str = './output/maze.svg'):
-        pass
+        """
+        Render the maze as an SVG file with a white background and clean, continuous borders.
+
+        Args:
+            maze (list): Flat list of cell objects, each with a `walls` attribute
+                        representing [top, right, bottom, left] walls.
+            width (int): Number of columns in the maze.
+            height (int): Number of rows in the maze.
+            output_path (str): Path where the SVG will be saved.
+        """
+        cell = self.cell_size
+        svg_lines = []
+
+        svg_width = width * cell
+        svg_height = height * cell
+
+        svg_lines.append(f'<svg xmlns="http://www.w3.org/2000/svg" width="{svg_width}" height="{svg_height}" viewBox="0 0 {svg_width} {svg_height}">')
+
+        svg_lines.append(f'<rect width="{svg_width}" height="{svg_height}" fill="white" />')
+
+        svg_lines.append('<g stroke="black" stroke-width="1">')
+
+        for y in range(height):
+            for x in range(width):
+                index = y * width + x
+                cell_obj = maze[index]
+                x0 = x * cell
+                y0 = y * cell
+                x1 = x0 + cell
+                y1 = y0 + cell
+
+                if cell_obj.walls[0]:  # Top
+                    svg_lines.append(f'<line x1="{x0}" y1="{y0}" x2="{x1}" y2="{y0}" />')
+                if cell_obj.walls[1]:  # Right
+                    svg_lines.append(f'<line x1="{x1}" y1="{y0}" x2="{x1}" y2="{y1}" />')
+                if cell_obj.walls[2]:  # Bottom
+                    svg_lines.append(f'<line x1="{x0}" y1="{y1}" x2="{x1}" y2="{y1}" />')
+                if cell_obj.walls[3]:  # Left
+                    svg_lines.append(f'<line x1="{x0}" y1="{y0}" x2="{x0}" y2="{y1}" />')
+
+        svg_lines.append('</g>')
+        svg_lines.append('</svg>')
+
+        with open(output_path, 'w') as f:
+            f.write('\n'.join(svg_lines))
