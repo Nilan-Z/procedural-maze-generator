@@ -88,14 +88,14 @@ class Display:
 
     def display_maze_svg(self, maze, width: int, height: int, output_path: str = './output/maze.svg'):
         """
-        Render the maze as an SVG file with a white background and clean, continuous borders.
+        Render the maze as an SVG file.
 
         Args:
             maze (list): Flat list of cell objects, each with a `walls` attribute
-                        representing [top, right, bottom, left] walls.
+                         representing [top, right, bottom, left] walls.
             width (int): Number of columns in the maze.
             height (int): Number of rows in the maze.
-            output_path (str): Path where the SVG will be saved.
+           output_path (str): Path where the image will be saved. Default is './output/maze.png'.
         """
         cell = self.cell_size
         svg_lines = []
