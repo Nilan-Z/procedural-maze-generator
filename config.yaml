@@ -1,5 +1,5 @@
-width: 30
-height: 30
+width: 25
+height: 25
 format: svg        # svg or png
 outputPath: ./output/
 filename: maze
