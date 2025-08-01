@@ -3,6 +3,7 @@ from generator.maze_generator import MazeGenerator
 from display.display import Display
 
 def load_config(path="config.yaml"):
+    """Load configuration from config.yaml."""
     with open(path, "r") as file:
         return yaml.safe_load(file)
 
