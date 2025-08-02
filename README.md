@@ -14,18 +14,20 @@ cd procedural-maze-generator
 
 Install dependencies:
 
-```bash
+```python
 pip install -r requirements.txt
 ```
 ## How to config
 
 Maze generation parameters are defined in the config.yaml file, located at the root of the project.
 
-    width: 25             # Maze width in cells
-    height: 25            # Maze height in cells
-    format: svg           # Output format: 'svg' or 'png'
-    outputPath: ./output/ # Directory where the maze image will be saved
-    filename: maze        # Name of the output file (without extension)
+```yaml
+width: 25             # Maze width in cells
+height: 25            # Maze height in cells
+format: svg           # Output format: 'svg' or 'png'
+outputPath: ./output/ # Directory where the maze image will be saved
+filename: maze        # Name of the output file (without extension)
+```
 
 
 
