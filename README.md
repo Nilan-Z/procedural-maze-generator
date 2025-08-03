@@ -29,7 +29,23 @@ outputPath: ./output/ # Directory where the maze image will be saved
 filename: maze        # Name of the output file (without extension)
 ```
 
-
-
 ## How to run
+
+After configuring `config.yaml`, run the generator with:
+
+```bash
+python generate_maze.py
+```
+
+The maze will be saved to the output directory you specified.
+
+
+## Example
+
+Here’s a sample generated maze (SVG format):
+
+![Maze example](output/example-maze.svg)
+
+You can adjust the dimensions and format in `config.yaml` to generate different types of mazes.
+
 
