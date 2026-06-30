@@ -15,9 +15,10 @@ if __name__ == "__main__":
     output_format = config.get("format", "svg")
     output_path = config.get("outputPath", "./output/")
     filename = config.get("filename", "maze")
+    mode = config.get("mode", "light")
 
     maze_generator = MazeGenerator()
     maze = maze_generator.generateMaze(width, height)
 
     display = Display()
-    display.display_maze(maze, width, height, output_path, filename, output_format)
+    display.display_maze(maze, width, height, output_path, filename, output_format, mode)
