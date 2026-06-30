@@ -21,7 +21,7 @@ class Display:
         """
         self.cell_size = cell_size
 
-    def display_maze(self, maze, width: int, height: int, output_path: str = './output/', filename: str = 'maze', output_format: str = 'png'):
+    def display_maze(self, maze, width: int, height: int, output_path: str = './output/', filename: str = 'maze', output_format: str = 'png', mode: str = 'light'):
         """
         Render the maze and save it to a file in the specified format.
 
@@ -32,21 +32,22 @@ class Display:
             height (int): Number of rows in the maze.
             output_path (str): Path where the image will be saved. Default is './output/maze.png'.
             output_format (str): Format of the output file ('png' or 'svg'). Default is 'png'.
+            mode (str): Color mode for the maze ('light' or 'dark'). Default is 'light'.
         """
     
         full_path = os.path.join(output_path, f"{filename}.{output_format.lower()}")
         os.makedirs(output_path, exist_ok=True)  # Assure que le dossier existe
 
         if output_format.lower() == 'png':
-            self.display_maze_png(maze, width, height, full_path)
+            self.display_maze_png(maze, width, height, full_path, mode)
         elif output_format.lower() == 'svg':
-            self.display_maze_svg(maze, width, height, full_path)
+            self.display_maze_svg(maze, width, height, full_path, mode)
         else:
             raise ValueError(f"Unsupported format: {output_format}. Use 'png' or 'svg'.")
 
         
 
-    def display_maze_png(self, maze, width: int, height: int, output_path: str = './output/maze.png'):
+    def display_maze_png(self, maze, width: int, height: int, output_path: str = './output/maze.png', mode: str = 'light'):
         """
         Render the maze as an image and save it to a file.
 
@@ -56,14 +57,22 @@ class Display:
             width (int): Number of columns in the maze.
             height (int): Number of rows in the maze.
             output_path (str): Path where the image will be saved. Default is './output/maze.png'.
+            mode (str): Color mode for the maze ('light' or 'dark'). Default is 'light'.
         """
-        img_width = width * self.cell_size
-        img_height = height * self.cell_size
+        img_width = (width * self.cell_size) + 1
+        img_height = (height * self.cell_size) + 1
+
+        if mode == 'dark':
+            background_color = 'black'
+            wall_color = 'white'
+        else:
+            background_color = 'white'
+            wall_color = 'black'
 
         # Ensure the output directory exists
         os.makedirs(os.path.dirname(output_path), exist_ok=True)
 
-        image = Image.new('RGB', (img_width, img_height), 'white')
+        image = Image.new('RGB', (img_width, img_height), background_color)
         draw = ImageDraw.Draw(image)
 
         for y in range(height):
@@ -76,17 +85,17 @@ class Display:
 
                 # Draw walls: [top, right, bottom, left]
                 if cell.walls[0]:
-                    draw.line([(x0, y0), (x1, y0)], fill='black')      # top
+                    draw.line([(x0, y0), (x1, y0)], fill=wall_color)      # top
                 if cell.walls[1]:
-                    draw.line([(x1, y0), (x1, y1)], fill='black')      # right
+                    draw.line([(x1, y0), (x1, y1)], fill=wall_color)      # right
                 if cell.walls[2]:
-                    draw.line([(x0, y1), (x1, y1)], fill='black')      # bottom
+                    draw.line([(x0, y1), (x1, y1)], fill=wall_color)      # bottom
                 if cell.walls[3]:
-                    draw.line([(x0, y0), (x0, y1)], fill='black')      # left
+                    draw.line([(x0, y0), (x0, y1)], fill=wall_color)      # left
 
         image.save(output_path)
 
-    def display_maze_svg(self, maze, width: int, height: int, output_path: str = './output/maze.svg'):
+    def display_maze_svg(self, maze, width: int, height: int, output_path: str = './output/maze.svg', mode: str = 'light'):
         """
         Render the maze as an SVG file.
 
@@ -95,40 +104,34 @@ class Display:
                          representing [top, right, bottom, left] walls.
             width (int): Number of columns in the maze.
             height (int): Number of rows in the maze.
-           output_path (str): Path where the image will be saved. Default is './output/maze.png'.
+            output_path (str): Path where the image will be saved. Default is './output/maze.png'.
+            mode (str): Color mode for the maze ('light' or 'dark'). Default is 'light'.
         """
+
         cell = self.cell_size
         svg_lines = []
 
         svg_width = width * cell
         svg_height = height * cell
+        
+        bg_col = "black" if mode == 'dark' else "white"
+        wall_col = "white" if mode == 'dark' else "black"
 
-        svg_lines.append(f'<svg xmlns="http://www.w3.org/2000/svg" width="{svg_width}" height="{svg_height}" viewBox="0 0 {svg_width} {svg_height}">')
-
-        svg_lines.append(f'<rect width="{svg_width}" height="{svg_height}" fill="white" />')
-
-        svg_lines.append('<g stroke="black" stroke-width="1">')
+        svg_lines.append(f'<svg xmlns="http://www.w3.org/2000/svg" width="{svg_width + 1}" height="{svg_height + 1}" viewBox="0 0 {svg_width + 1} {svg_height + 1}">')
+        svg_lines.append(f'<rect width="{svg_width + 1}" height="{svg_height + 1}" fill="{bg_col}" />')
+        svg_lines.append(f'<g stroke="{wall_col}" stroke-width="1">')
 
         for y in range(height):
             for x in range(width):
-                index = y * width + x
-                cell_obj = maze[index]
-                x0 = x * cell
-                y0 = y * cell
-                x1 = x0 + cell
-                y1 = y0 + cell
+                cell_obj = maze[y * width + x]
+                x0, y0 = x * cell, y * cell
+                x1, y1 = x0 + cell, y0 + cell
 
-                if cell_obj.walls[0]:  # Top
-                    svg_lines.append(f'<line x1="{x0}" y1="{y0}" x2="{x1}" y2="{y0}" />')
-                if cell_obj.walls[1]:  # Right
-                    svg_lines.append(f'<line x1="{x1}" y1="{y0}" x2="{x1}" y2="{y1}" />')
-                if cell_obj.walls[2]:  # Bottom
-                    svg_lines.append(f'<line x1="{x0}" y1="{y1}" x2="{x1}" y2="{y1}" />')
-                if cell_obj.walls[3]:  # Left
-                    svg_lines.append(f'<line x1="{x0}" y1="{y0}" x2="{x0}" y2="{y1}" />')
+                if cell_obj.walls[0]: svg_lines.append(f'<line x1="{x0}" y1="{y0}" x2="{x1}" y2="{y0}" />')
+                if cell_obj.walls[1]: svg_lines.append(f'<line x1="{x1}" y1="{y0}" x2="{x1}" y2="{y1}" />')
+                if cell_obj.walls[2]: svg_lines.append(f'<line x1="{x0}" y1="{y1}" x2="{x1}" y2="{y1}" />')
+                if cell_obj.walls[3]: svg_lines.append(f'<line x1="{x0}" y1="{y0}" x2="{x0}" y2="{y1}" />')
 
-        svg_lines.append('</g>')
-        svg_lines.append('</svg>')
-
+        svg_lines.append('</g></svg>')
         with open(output_path, 'w') as f:
             f.write('\n'.join(svg_lines))
